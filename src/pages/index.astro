@@ -1,0 +1,36 @@
+---
+export const prerender = false;
+
+const defaultLang = 'en';
+let targetLang = defaultLang;
+
+// 首先检查 cookie 中的语言设置
+if (Astro.cookies.has('language')) {
+  targetLang = Astro.cookies.get('language').value;
+} else if (Astro.request.headers.get('cookie')?.includes('language=')) {
+  const cookies = Astro.request.headers.get('cookie')?.split(';');
+  const languageCookie = cookies?.find(cookie => cookie.trim().startsWith('language='));
+  if (languageCookie) {
+    targetLang = languageCookie.split('=')[1];
+  }
+} else {
+  // 如果没有 cookie，则使用浏览器语言设置
+  const userLang = Astro.preferredLocale || defaultLang;
+  // 检查用户语言是否匹配任何支持的语言
+  if (userLang.startsWith('zh')) targetLang = 'zh';
+  else if (userLang.startsWith('es')) targetLang = 'es';
+  else if (userLang.startsWith('hi')) targetLang = 'hi';
+  else if (userLang.startsWith('ar')) targetLang = 'ar';
+  else if (userLang.startsWith('ru')) targetLang = 'ru';
+  else targetLang = 'en';
+}
+
+// 确保 targetLang 是支持的语言之一
+const supportedLangs = ['en', 'zh', 'es', 'hi', 'ar', 'ru'];
+targetLang = supportedLangs.includes(targetLang) ? targetLang : defaultLang;
+
+// 设置语言 cookie
+Astro.cookies.set('language', targetLang);
+
+return Astro.redirect(`/${targetLang}`);
+---

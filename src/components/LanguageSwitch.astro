@@ -1,0 +1,135 @@
+---
+interface Props {
+  currentLang: string;
+}
+
+const { currentLang } = Astro.props;
+
+const languages = [
+  { code: 'en', name: 'English' },
+  { code: 'es', name: 'Español' },
+  { code: 'hi', name: 'हिंदी' },
+  { code: 'ar', name: 'العربية' },
+  { code: 'zh', name: '中文' },
+  { code: 'ru', name: 'Русский' }
+];
+---
+
+<div class="fixed top-5 right-5 flex items-center gap-4 z-50">
+  <div class="relative">
+    <button
+      class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+      id="language-menu-button"
+      aria-expanded="false"
+      aria-haspopup="true"
+    >
+      {languages.find(lang => lang.code === currentLang)?.name}
+      <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+      </svg>
+    </button>
+    <div
+      class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none"
+      role="menu"
+      aria-orientation="vertical"
+      aria-labelledby="language-menu-button"
+      tabindex="-1"
+      id="language-menu"
+    >
+      <div class="py-1" role="none">
+        {languages.map((lang) => (
+          <a
+            href={`/${lang.code}`}
+            class={`block px-4 py-2 text-sm ${currentLang === lang.code ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white' : 'text-gray-700 dark:text-gray-300'} hover:bg-gray-100 dark:hover:bg-gray-700`}
+            role="menuitem"
+            tabindex="-1"
+          >
+            {lang.name}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <button
+    id="theme-toggle"
+    class="p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg"
+  >
+    <svg
+      id="theme-toggle-dark-icon"
+      class="hidden w-5 h-5"
+      fill="currentColor"
+      viewBox="0 0 20 20"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+    </svg>
+    <svg
+      id="theme-toggle-light-icon"
+      class="hidden w-5 h-5"
+      fill="currentColor"
+      viewBox="0 0 20 20"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+      ></path>
+    </svg>
+  </button>
+</div>
+
+<script>
+  // 主题切换功能
+  const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+  const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+  const themeToggleBtn = document.getElementById('theme-toggle');
+
+  // 语言切换功能
+  const languageMenuButton = document.getElementById('language-menu-button');
+  const languageMenu = document.getElementById('language-menu');
+
+  // 点击按钮切换菜单显示状态
+  languageMenuButton?.addEventListener('click', (event) => {
+    event.stopPropagation();
+    languageMenu?.classList.toggle('hidden');
+    languageMenuButton.setAttribute('aria-expanded', languageMenu?.classList.contains('hidden') ? 'false' : 'true');
+  });
+
+  // 点击外部区域关闭菜单
+  document.addEventListener('click', () => {
+    if (!languageMenu?.classList.contains('hidden')) {
+      languageMenu?.classList.add('hidden');
+      languageMenuButton?.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  // 阻止菜单内部点击事件冒泡
+  languageMenu?.addEventListener('click', (event) => {
+    event.stopPropagation();
+  });
+
+  // 根据本地存储或系统偏好设置初始主题
+  if (localStorage.getItem('color-theme') === 'dark' ||
+      (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.classList.add('dark');
+    themeToggleLightIcon?.classList.remove('hidden');
+  } else {
+    document.documentElement.classList.remove('dark');
+    themeToggleDarkIcon?.classList.remove('hidden');
+  }
+
+  themeToggleBtn?.addEventListener('click', function() {
+    // 切换图标
+    themeToggleDarkIcon?.classList.toggle('hidden');
+    themeToggleLightIcon?.classList.toggle('hidden');
+
+    // 切换主题
+    if (localStorage.getItem('color-theme') === 'dark') {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('color-theme', 'light');
+    } else {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('color-theme', 'dark');
+    }
+  });
+</script>

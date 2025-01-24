@@ -1,0 +1,11 @@
+---
+import WorkTimeTableVue from './work-time/WorkTimeTable.vue';
+
+interface Props {
+  currentLang: string;
+}
+
+const { currentLang } = Astro.props;
+---
+
+<WorkTimeTableVue client:load currentLang={currentLang} />
