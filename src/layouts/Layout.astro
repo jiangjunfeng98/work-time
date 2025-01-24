@@ -1,56 +1,70 @@
 ---
-import LanguageSwitch from '../components/LanguageSwitch.astro';
+import LanguageSwitch from '../components/LanguageSwitch.astro'
 
 interface Props {
-  title?: string;
+  title?: string
 }
 
-const { title } = Astro.props;
-const currentLang = Astro.url.pathname.split('/')[1] || 'en';
+interface Props {
+  title?: string
+  description?: string
+}
+
+const { title = 'Work Time', description = 'Quick check if countries around the world are currently working.' } = Astro.props
+const currentLang = Astro.url.pathname.split('/')[1] || 'en'
 ---
 
 <!doctype html>
 <html lang={currentLang}>
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Work Time</title>
-	</head>
-	<body class="min-h-screen bg-white text-gray-900 dark:bg-dark-primary dark:text-dark-text transition-colors duration-200">
-		<LanguageSwitch currentLang={currentLang} />
-		<slot />
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content="work time, world work time, current work status, global work hours" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.href} />
+    <!-- <meta property="og:image" content="/path/to/your/image.jpg" /> -->
+    <!-- <meta name="twitter:card" content="summary_large_image" /> -->
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+  </head>
+  <body class="min-h-screen bg-white text-gray-900 dark:bg-dark-primary dark:text-dark-text transition-colors duration-200">
+    <LanguageSwitch currentLang={currentLang} />
+    <slot />
+  </body>
 </html>
 
 <style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
 </style>
 
 <script>
   // 初始化主题
   const initTheme = () => {
-    if (localStorage.getItem('color-theme') === 'dark' ||
-        (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
+    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark')
     } else {
-      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.remove('dark')
     }
-  };
-  
+  }
+
   // 在页面加载时初始化主题
-  document.addEventListener('DOMContentLoaded', initTheme);
-  
+  document.addEventListener('DOMContentLoaded', initTheme)
+
   // 在页面可见时重新检查主题
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
-      initTheme();
+      initTheme()
     }
-  });
+  })
 </script>
