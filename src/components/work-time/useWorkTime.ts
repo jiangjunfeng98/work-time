@@ -5,6 +5,7 @@ import utc from 'dayjs/plugin/utc.js'
 import timezone from 'dayjs/plugin/timezone.js'
 import isBetween from 'dayjs/plugin/isBetween.js'
 import { translations } from '../../i18n/translations';
+import { holidayList } from './holiday'
 
 const useWorkTime = (props: any) => {
     dayjs.extend(utc)
@@ -79,7 +80,8 @@ const useWorkTime = (props: any) => {
         const isFavorite = likeList.has(country.countryRegion)
         // 检查是否为周末（0表示周日，6表示周六）
         const dayOfWeek = targetTime.day();
-        if (dayOfWeek === 0 || dayOfWeek === 6) {
+        const isHoliday = holidayList[country.countryRegion]?.includes(currentDate);
+        if (dayOfWeek === 0 || dayOfWeek === 6 || isHoliday) {
             return {
                 isWorking: false,
                 currentTime: currentTime,
@@ -123,7 +125,7 @@ const useWorkTime = (props: any) => {
 
     const updateTime = () => {
         currentTime.value = dayjs().format('YYYY-MM-DD HH:mm:ss')
-        countriesList.value = (sortKey.value?countriesList.value:countries).map(country => ({
+        countriesList.value = (sortKey.value ? countriesList.value : countries).map(country => ({
             ...country,
             workStatus: calculateWorkStatus(country)
         }));
