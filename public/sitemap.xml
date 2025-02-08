@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://isworkingnow.com/en</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://isworkingnow.com/en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://isworkingnow.com/es"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://isworkingnow.com/hi"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://isworkingnow.com/ar"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://isworkingnow.com/zh"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://isworkingnow.com/ru"/>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

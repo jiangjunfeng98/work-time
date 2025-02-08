@@ -1,9 +1,6 @@
 ---
 import LanguageSwitch from '../components/LanguageSwitch.astro'
-
-interface Props {
-  title?: string
-}
+import { languages } from '../i18n/languages'
 
 interface Props {
   title?: string
@@ -23,15 +20,37 @@ const currentLang = Astro.url.pathname.split('/')[1] || 'en'
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="keywords" content="work time, world work time, current work status, global work hours" />
+    <meta name="keywords" content="work time, world work time, current work status, global work hours, working hours, international business hours, global time zones, business hours by country, isworkingnow, global business time, international work schedule" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="IsWorkingNow" />
+    <link rel="canonical" href={`https://isworkingnow.com${Astro.url.pathname}`} />
+    <meta name="google-site-verification" content="" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="format-detection" content="telephone=no" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={Astro.url.href} />
-    <!-- <meta property="og:image" content="/path/to/your/image.jpg" /> -->
-    <!-- <meta name="twitter:card" content="summary_large_image" /> -->
+    <meta property="og:url" content={`https://isworkingnow.com${Astro.url.pathname}`} />
+    <meta property="og:site_name" content="IsWorkingNow" />
+    <meta property="og:locale" content={currentLang} />
+    <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    {languages.map((lang) => (
+      <link rel="alternate" hreflang={lang.code} href={`${Astro.url.origin}/${lang.code}`} />
+    ))}
+    <script type="application/ld+json">
+      {JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": title,
+        "description": description,
+        "url": Astro.url.href,
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "All",
+        "inLanguage": currentLang
+      })}
+    </script>
   </head>
   <body class="min-h-screen bg-white text-gray-900 dark:bg-dark-primary dark:text-dark-text transition-colors duration-200">
     <LanguageSwitch currentLang={currentLang} />
