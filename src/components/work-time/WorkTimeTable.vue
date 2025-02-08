@@ -1,21 +1,25 @@
 <template>
-  <div class="max-w-[1100px] mx-auto p-5 overflow-x-auto">
-    <div class="text-center mb-5">
-      <h1 class="text-2xl text-gray-800 dark:text-gray-200 mb-2.5">
+  <div class="max-w-[1100px] mx-auto p-5">
+    <div class="text-left mb-5 bg-gray-50 dark:bg-gray-800/50 p-6 rounded-lg shadow-sm">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
         {{ translations[currentLang].header.currentTime }}
-        <span class="inline-block min-w-[100px] font-mono text-center" id="current-time">{{ currentTime }}</span>
-        {{ localTimezone }}
+        <span class="inline-block min-w-[100px] font-mono text-center bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-3 py-1 rounded shadow-sm hover:shadow-md transition-shadow duration-200" id="current-time">{{ currentTime }}</span>
+        <span class="m-1 text-sm text-gray-600 dark:text-gray-400">{{ localTimezone }}</span>
       </h1>
-      <p class="text-gray-600 dark:text-gray-400 m-0">{{ translations[currentLang].header.description }}</p>
-      <div class="text-sm text-gray-500 dark:text-gray-400 mt-4 space-y-1">
-        <p>• {{ translations[currentLang].header.workTimeStandard.shortestWorkTime }}</p>
-        <p>• {{ translations[currentLang].header.workTimeStandard.workStatusRule }}</p>
-        <p>• {{ translations[currentLang].header.workTimeStandard.timezoneRule }}</p>
+      
+      <button @click="showDetails = !showDetails" class="mt-2 text-base text-gray-600 dark:text-gray-300 flex items-center gap-2 hover:bg-white dark:hover:bg-gray-800/50 px-3 py-1.5 rounded-md transition-all duration-200">
+        <span class="transform transition-transform duration-200" :class="{ 'rotate-90': showDetails }">›</span>
+        <p class="text-gray-700 dark:text-gray-200 m-0 font-medium">{{ translations[currentLang].header.description }}</p>
+      </button>
+      <div v-show="showDetails" class="text-sm text-gray-600 dark:text-gray-300 mt-3 space-y-2 ml-6 bg-white/50 dark:bg-gray-800/30 p-4 rounded-md">
+        <p class="flex items-start gap-2"><span class="text-indigo-500 dark:text-indigo-400">•</span>{{ translations[currentLang].header.workTimeStandard.shortestWorkTime }}</p>
+        <p class="flex items-start gap-2"><span class="text-indigo-500 dark:text-indigo-400">•</span>{{ translations[currentLang].header.workTimeStandard.workStatusRule }}</p>
+        <p class="flex items-start gap-2"><span class="text-indigo-500 dark:text-indigo-400">•</span>{{ translations[currentLang].header.workTimeStandard.timezoneRule }}</p>
       </div>
     </div>
 
-    <table class="w-full border-collapse bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
-      <thead>
+    <table class="w-full border-collapse bg-white dark:bg-gray-800 rounded-lg">
+      <thead class="sticky top-0">
         <tr>
           <th v-for="header in tableHeaders" :key="header" 
               class="bg-gray-50 dark:bg-gray-700 font-semibold text-gray-700 dark:text-gray-300 p-2 text-left whitespace-nowrap select-none"
@@ -57,8 +61,13 @@
           </td>
           <td class="p-2 text-gray-700 dark:text-gray-300">{{ country.workStartTime }}</td>
           <td class="p-2 text-gray-700 dark:text-gray-300">{{ country.workEndTime }}</td>
-          <td class="p-2" :class="{ 'text-green-500 dark:text-green-400 font-semibold': country.workStatus.isWorking, 'text-red-500 dark:text-red-400 font-semibold': !country.workStatus.isWorking }">
-            {{ country.workStatus.isWorking ? translations[currentLang].table.working : translations[currentLang].table.notWorking }}
+          <td class="p-2">
+            <span class="inline-block px-3 py-1 rounded-full text-sm font-medium transition-colors duration-200" :class="{
+              'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-900/50': country.workStatus.isWorking,
+              'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-900/50': !country.workStatus.isWorking
+            }">
+              {{ country.workStatus.isWorking ? translations[currentLang].table.working : translations[currentLang].table.notWorking }}
+            </span>
           </td>
           <td class="p-2" :class="{ 'text-yellow-500 dark:text-yellow-400': country.workStatus.isNearEndOfWork }">
             {{ country.workStatus.remainingTime }}
@@ -90,5 +99,5 @@ const props = defineProps({
     required: true
   }
 });
-const { countriesList, toggleFavorite, localTimezone, currentTime, toggleSort, tableHeaders, sortKey, sortOrder } = useWorkTime(props);
+const { countriesList, toggleFavorite, localTimezone, currentTime, toggleSort, tableHeaders, sortKey, sortOrder,showDetails } = useWorkTime(props);
 </script>

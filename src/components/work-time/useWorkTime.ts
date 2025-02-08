@@ -14,6 +14,7 @@ const useWorkTime = (props: any) => {
 
     const currentTime = ref('');
     const localTimezone = ref();
+    const showDetails = ref(false);
     const countriesList = ref<ICountry[]>([]);
     const intervalId = shallowRef();
     const sortKey = ref('');
@@ -53,13 +54,12 @@ const useWorkTime = (props: any) => {
                 aValue = translations[props.currentLang].countries[a.countryRegion];
                 bValue = translations[props.currentLang].countries[b.countryRegion];
             } else if (sortKey.value === 'workStatus') {
-                aValue = a.isWorking;
-                bValue = b.isWorking;
+                aValue = a.workStatus.isWorking ? 1 : 0;
+                bValue = b.workStatus.isWorking ? 1 : 0;
             } else if (sortKey.value === 'favorite') {
                 aValue = a.workStatus.isFavorite;
                 bValue = b.workStatus.isFavorite;
             }
-
             if (aValue === bValue) return 0;
             if (sortOrder.value === 'asc') {
                 return aValue > bValue ? 1 : -1;
@@ -81,20 +81,22 @@ const useWorkTime = (props: any) => {
         // 检查是否为周末（0表示周日，6表示周六）
         const dayOfWeek = targetTime.day();
         const isHoliday = holidayList[country.countryRegion]?.includes(currentDate);
+        let remainingTime = '-';
         if (dayOfWeek === 0 || dayOfWeek === 6 || isHoliday) {
             return {
                 isWorking: false,
                 currentTime: currentTime,
                 currentDate: currentDate,
                 isNearEndOfWork: false,
-                isFavorite: isFavorite
+                isFavorite: isFavorite,
+                remainingTime:remainingTime
             };
         }
         const workStartTime = dayjs(`${currentDate} ${country.workStartTime}`).format('YYYY-MM-DD HH:mm');
         const workEndTime = dayjs(`${currentDate} ${country.workEndTime}`).format('YYYY-MM-DD HH:mm');
         let isWorking = dayjs(`${currentDate} ${currentTime}`).isBetween(workStartTime, workEndTime)
 
-        let remainingTime = '-';
+
         let hours = 0;
         let minutes = 0;
 
@@ -167,7 +169,7 @@ const useWorkTime = (props: any) => {
             intervalId.value = null
         }
     })
-    return { countriesList, toggleFavorite, localTimezone, currentTime, toggleSort, tableHeaders, sortKey, sortOrder }
+    return { countriesList, toggleFavorite, localTimezone, currentTime, toggleSort, tableHeaders, sortKey, sortOrder,showDetails }
 }
 
 export default useWorkTime

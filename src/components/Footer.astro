@@ -1,0 +1,19 @@
+---
+interface Props {
+  currentLang: string;
+}
+
+const { currentLang } = Astro.props;
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="mt-8 p-4 bg-gray-50 dark:bg-gray-800 transition-colors duration-200">
+  <div class="container mx-auto">
+    <div class="text-center">
+      <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">IsWorkingNow</h3>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Your trusted global work hours checker. Get real-time information about business hours across different time zones and countries.</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-4">© {currentYear} IsWorkingNow. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+</footer>
